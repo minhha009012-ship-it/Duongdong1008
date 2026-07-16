@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4500 English Collocations & Idioms - Lộ Trình 30 Ngày</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .preserve-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+        .flip-card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .flipped {
+            transform: rotateY(180deg);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="h-full text-slate-100 font-sans antialiased bg-slate-950 flex flex-col md:flex-row overflow-hidden">
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="w-full md:w-80 bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 flex flex-col justify-between shrink-0 z-20">
+        <div class="p-6">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 mb-8">
+                <div class="bg-indigo-600 p-2.5 rounded-2xl text-xl font-bold shadow-lg shadow-indigo-500/20">📚</div>
+                <div>
+                    <h1 class="font-extrabold text-md leading-tight text-white tracking-wide">Collocations & Idioms</h1>
+                    <p class="text-[10px] text-indigo-400 font-bold uppercase tracking-widest">Lộ trình 30 ngày bứt phá</p>
+                </div>
+            </div>
+
+            <!-- Stats Mini Dashboard -->
+            <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 mb-6">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Tiến độ tổng thể</span>
+                    <span id="global-progress-txt" class="text-xs font-extrabold text-indigo-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden mb-3">
+                    <div id="global-progress-bar" class="bg-indigo-500 h-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-center">
+                    <div class="bg-slate-900/80 p-2 rounded-xl">
+                        <span class="text-[9px] text-slate-500 font-bold block uppercase">Đã thuộc</span>
+                        <span id="learned-count" class="text-sm font-extrabold text-emerald-400">0</span>
+                    </div>
+                    <div class="bg-slate-900/80 p-2 rounded-xl">
+                        <span class="text-[9px] text-slate-500 font-bold block uppercase">Sắp quên (SRS)</span>
+                        <span id="srs-due-count" class="text-sm font-extrabold text-rose-400">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="space-y-1">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-600/10">
+                    <span class="text-lg">📊</span>
+                    <span>Bảng Điều Khiển</span>
+                </button>
+                <button onclick="switchTab('flashcards')" id="nav-flashcards" class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <span class="text-lg">🃏</span>
+                    <span>Thẻ Học Flashcards</span>
+                </button>
+                <button onclick="switchTab('srs')" id="nav-srs" class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50 relative">
+                    <span class="text-lg">⏳</span>
+                    <span>Ôn Tập Sắp Quên (SRS)</span>
+                    <span id="srs-badge" class="absolute right-4 bg-rose-500/20 text-rose-400 text-[10px] px-2 py-0.5 rounded-full font-bold border border-rose-500/30 hidden">0</span>
+                </button>
+                <button onclick="switchTab('games')" id="nav-games" class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <span class="text-lg">🎮</span>
+                    <span>Trò Chơi Phản Xạ</span>
+                </button>
+                <button onclick="switchTab('dictionary')" id="nav-dictionary" class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <span class="text-lg">🔍</span>
+                    <span>Từ Điển Tra Cứu</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Footer of Sidebar -->
+        <div class="p-6 border-t border-slate-800">
+            <div class="bg-indigo-950/30 border border-indigo-500/20 p-4 rounded-2xl">
+                <div class="flex items-center gap-2 mb-1.5">
+                    <span class="text-sm">✨</span>
+                    <h4 class="text-xs font-bold text-indigo-300 uppercase tracking-wider">Mở Rộng Bằng AI</h4>
+                </div>
+                <p class="text-[10px] text-slate-400 leading-relaxed">Tự động kết nối Gemini để tải thêm collocations mới từ sách Trang Anh.</p>
+                <button onclick="showAIModal()" class="w-full mt-3 bg-indigo-600 hover:bg-indigo-500 text-white text-xs py-2 rounded-xl font-bold transition-all shadow-md">
+                    Nạp Từ Bằng AI
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT VIEWPORT -->
+    <main class="flex-1 flex flex-col min-w-0 max-h-screen overflow-y-auto bg-slate-950" id="main-content">
+        
+        <!-- DASHBOARD TAB -->
+        <div id="tab-dashboard" class="p-6 md:p-10 space-y-8 block">
+            <!-- Header banner -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+                <div>
+                    <h2 class="text-3xl font-black text-white leading-tight">Chào anh! Sẵn sàng chinh phục mục tiêu?</h2>
+                    <p class="text-slate-400 text-sm mt-1">Lộ trình 30 ngày ôn luyện Collocations & Idioms khoa học.</p>
+                </div>
+                <button onclick="switchTab('flashcards')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-2xl font-bold text-sm shadow-lg shadow-indigo-600/20 transition-all flex items-center gap-2 self-start md:self-auto">
+                    🚀 Học Bài Hôm Nay
+                </button>
+            </div>
+
+            <!-- 30-Day Grid Container -->
+            <div>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <span>🗓️</span> Bản đồ Lộ trình 30 Ngày (150 từ/ngày)
+                    </h3>
+                    <span class="text-xs text-slate-500 font-medium">Bấm vào bất cứ ngày nào để học</span>
+                </div>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4" id="days-grid">
+                    <!-- Day cards dynamically injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- FLASHCARDS TAB -->
+        <div id="tab-flashcards" class="p-6 md:p-10 space-y-6 hidden flex-col h-full justify-between max-w-4xl mx-auto w-full">
+            <!-- Card Header info -->
+            <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                    <button onclick="switchTab('dashboard')" class="text-slate-400 hover:text-white bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1">
+                        ← Trở về
+                    </button>
+                    <span id="current-deck-title" class="text-sm font-extrabold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1.5 rounded-xl">Học Ngày 1</span>
+                </div>
+                <div class="text-right">
+                    <span id="card-progress-counter" class="text-xs font-bold text-slate-400">0 / 0 Cụm Từ</span>
+                </div>
+            </div>
+
+            <!-- Flashcard 3D Wrapper -->
+            <div class="flex-1 flex flex-col items-center justify-center py-6 min-h-[400px]">
+                <div class="w-full max-w-lg aspect-[3/2] md:aspect-[1.6/1] perspective-1000 group cursor-pointer" onclick="flipCard()">
+                    <div id="flashcard-inner" class="w-full h-full preserve-3d flip-card-inner relative shadow-2xl rounded-[2.5rem] border border-slate-800">
+                        
+                        <!-- FRONT SIDE -->
+                        <div class="absolute inset-0 w-full h-full backface-hidden rounded-[2.5rem] p-8 flex flex-col justify-between bg-gradient-to-br from-slate-900 to-slate-950">
+                            <!-- Top bar -->
+                            <div class="flex justify-between items-center">
+                                <span id="card-type-badge-front" class="bg-indigo-500/20 text-indigo-300 text-[10px] uppercase font-black tracking-wider px-3 py-1 rounded-full border border-indigo-500/30">COLLOCATION</span>
+                                <button onclick="event.stopPropagation(); triggerTTS()" class="p-3 bg-slate-800/80 hover:bg-slate-700 hover:scale-105 rounded-2xl text-slate-300 transition-all shadow-md">🔊</button>
+                            </div>
+                            
+                            <!-- Middle content -->
+                            <div class="text-center my-auto px-4">
+                                <h3 id="card-phrase" class="text-3xl md:text-4xl font-serif italic text-white tracking-wide">burn the midnight oil</h3>
+                                <p id="card-ipa" class="text-sm text-indigo-400 font-mono mt-3">/bɜːrn ðə ˈmɪdnaɪt ɔɪl/</p>
+                            </div>
+
+                            <!-- Bottom bar -->
+                            <div class="flex justify-between items-center text-xs text-slate-500">
+                                <span class="flex items-center gap-1">💡 Click để xem nghĩa</span>
+                                <span id="card-index-txt">#1</span>
+                            </div>
+                        </div>
+
+                        <!-- BACK SIDE -->
+                        <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-[2.5rem] p-8 flex flex-col justify-between bg-gradient-to-br from-slate-900 via-indigo-950/20 to-slate-950">
+                            <!-- Top bar -->
+                            <div class="flex justify-between items-center">
+                                <span id="card-type-badge-back" class="bg-indigo-500/20 text-indigo-300 text-[10px] uppercase font-black tracking-wider px-3 py-1 rounded-full border border-indigo-500/30">IDIOM</span>
+                                <button onclick="event.stopPropagation(); triggerTTS()" class="p-3 bg-slate-800/80 hover:bg-slate-700 hover:scale-105 rounded-2xl text-slate-300 transition-all shadow-md">🔊</button>
+                            </div>
+
+                            <!-- Middle Details -->
+                            <div class="my-auto space-y-4 px-2">
+                                <div>
+                                    <span class="text-[9px] text-slate-500 uppercase font-black tracking-wider block mb-1">Nghĩa tiếng Việt</span>
+                                    <h4 id="card-meaning-vi" class="text-xl md:text-2xl font-bold text-emerald-400 leading-tight">Thức khuya để học bài hoặc làm việc</h4>
+                                </div>
+                                <div class="border-t border-slate-800/80 pt-3">
+                                    <span class="text-[9px] text-slate-500 uppercase font-black tracking-wider block mb-1">Ví dụ minh họa</span>
+                                    <p id="card-example-en" class="text-sm font-medium text-slate-200 italic leading-relaxed">"She has been burning the midnight oil to prepare for her final exam."</p>
+                                    <p id="card-example-vi" class="text-xs text-slate-400 mt-1">"Cô ấy đã thức khuya học bài để chuẩn bị cho kỳ thi cuối kỳ."</p>
+                                </div>
+                            </div>
+
+                            <!-- Bottom bar -->
+                            <div class="text-xs text-slate-500 flex justify-between items-center">
+                                <span class="flex items-center gap-1">↩️ Click để quay lại</span>
+                                <span>Double click phát âm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SRS Assessment Controls -->
+            <div class="space-y-4">
+                <p class="text-center text-xs text-slate-500">Mức độ hiểu của anh? (Ảnh hưởng tới tần suất nhắc lại của SRS)</p>
+                <div class="grid grid-cols-4 gap-3 max-w-lg mx-auto">
+                    <button onclick="rateCard(0)" class="py-3 px-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 rounded-2xl text-rose-400 text-xs font-black transition-all shadow-md">
+                        😡 Quên rồi
+                    </button>
+                    <button onclick="rateCard(3)" class="py-3 px-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-2xl text-amber-400 text-xs font-black transition-all shadow-md">
+                        😕 Khó quá
+                    </button>
+                    <button onclick="rateCard(4)" class="py-3 px-2 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 rounded-2xl text-indigo-400 text-xs font-black transition-all shadow-md">
+                        🙂 Đã thuộc
+                    </button>
+                    <button onclick="rateCard(5)" class="py-3 px-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 rounded-2xl text-emerald-400 text-xs font-black transition-all shadow-md">
+                        🥳 Quá dễ
+                    </button>
+                </div>
+                <div class="flex justify-between items-center max-w-lg mx-auto pt-2">
+                    <button onclick="prevCard()" class="text-slate-400 hover:text-white text-xs font-bold px-4 py-2 bg-slate-900 rounded-xl border border-slate-800 transition-colors">← Câu trước</button>
+                    <button onclick="nextCard()" class="text-slate-400 hover:text-white text-xs font-bold px-4 py-2 bg-slate-900 rounded-xl border border-slate-800 transition-colors">Câu kế tiếp →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SRS DUE REVIEW TAB -->
+        <div id="tab-srs" class="p-6 md:p-10 space-y-6 hidden flex-col h-full justify-between max-w-4xl mx-auto w-full">
+            <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                    <button onclick="switchTab('dashboard')" class="text-slate-400 hover:text-white bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1">
+                        ← Trở về
+                    </button>
+                    <span class="text-sm font-extrabold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3 py-1.5 rounded-xl">⏳ Ôn Tập Ngắt Quãng (SRS)</span>
+                </div>
+                <div class="text-right">
+                    <span id="srs-progress-counter" class="text-xs font-bold text-slate-400">0 Cụm Từ Cần Ôn</span>
+                </div>
+            </div>
+
+            <!-- Empty State of SRS -->
+            <div id="srs-empty" class="flex-1 flex flex-col items-center justify-center text-center p-8 space-y-6">
+                <div class="w-24 h-24 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full flex items-center justify-center text-4xl shadow-xl shadow-emerald-500/5 animate-bounce">🏆</div>
+                <div class="space-y-2">
+                    <h3 class="text-2xl font-extrabold text-white">Quá Xuất Sắc Anh Ơi!</h3>
+                    <p class="text-slate-400 text-sm max-w-md">Tất cả các cụm từ đã học hiện tại đều được ghi nhớ vững vàng. Chưa có từ nào cần lặp lại vào thời điểm này.</p>
+                </div>
+                <button onclick="switchTab('dashboard')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-2xl font-bold text-sm shadow-md transition-all">
+                    Tiếp Tục Học Từ Mới
+                </button>
+            </div>
+
+            <!-- Active SRS Deck Wrapper -->
+            <div id="srs-deck" class="flex-1 hidden flex-col items-center justify-center py-6 min-h-[400px]">
+                <!-- SRS Card (re-uses flipCard class style) -->
+                <div class="w-full max-w-lg aspect-[3/2] md:aspect-[1.6/1] perspective-1000 cursor-pointer" onclick="flipCardSRS()">
+                    <div id="flashcard-srs-inner" class="w-full h-full preserve-3d flip-card-inner relative shadow-2xl rounded-[2.5rem] border border-slate-800">
+                        <!-- FRONT SIDE -->
+                        <div class="absolute inset-0 w-full h-full backface-hidden rounded-[2.5rem] p-8 flex flex-col justify-between bg-gradient-to-br from-slate-900 to-slate-950">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-rose-500/20 text-rose-300 text-[10px] uppercase font-black tracking-wider px-3 py-1 rounded-full border border-rose-500/30">ÔN TẬP SRS</span>
+                                <button onclick="event.stopPropagation(); triggerSRSTTS()" class="p-3 bg-slate-800/80 hover:bg-slate-700 rounded-2xl text-slate-300 transition-all">🔊</button>
+                            </div>
+                            <div class="text-center my-auto px-4">
+                                <h3 id="srs-card-phrase" class="text-3xl md:text-4xl font-serif italic text-white tracking-wide">cost an arm and a leg</h3>
+                                <p id="srs-card-ipa" class="text-sm text-indigo-400 font-mono mt-3">/kɒst ən ɑːm ænd ə leg/</p>
+                            </div>
+                            <div class="flex justify-between items-center text-xs text-slate-500">
+                                <span>💡 Click để tự kiểm tra ý nghĩa</span>
+                                <span>Ôn từ cũ</span>
+                            </div>
+                        </div>
+
+                        <!-- BACK SIDE -->
+                        <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-[2.5rem] p-8 flex flex-col justify-between bg-gradient-to-br from-slate-900 via-rose-950/20 to-slate-950">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-rose-500/20 text-rose-300 text-[10px] uppercase font-black tracking-wider px-3 py-1 rounded-full border border-rose-500/30">ÔN TẬP SRS</span>
+                                <button onclick="event.stopPropagation(); triggerSRSTTS()" class="p-3 bg-slate-800/80 hover:bg-slate-700 rounded-2xl text-slate-300 transition-all">🔊</button>
+                            </div>
+                            <div class="my-auto space-y-4 px-2">
+                                <div>
+                                    <span class="text-[9px] text-slate-500 uppercase font-black tracking-wider block mb-1">Nghĩa tiếng Việt</span>
+                                    <h4 id="srs-card-meaning-vi" class="text-xl md:text-2xl font-bold text-emerald-400 leading-tight">Rất đắt đỏ</h4>
+                                </div>
+                                <div class="border-t border-slate-800/80 pt-3">
+                                    <span class="text-[9px] text-slate-500 uppercase font-black tracking-wider block mb-1">Ví dụ minh họa</span>
+                                    <p id="srs-card-example-en" class="text-sm font-medium text-slate-200 italic leading-relaxed">"His new sports car cost an arm and a leg."</p>
+                                    <p id="srs-card-example-vi" class="text-xs text-slate-400 mt-1">"Chiếc xe thể thao mới của anh ấy đắt kinh khủng."</p>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-500 flex justify-between items-center">
+                                <span>↩️ Click để lật lại</span>
+                                <span>Double click phát âm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SRS Rating bar -->
+            <div id="srs-controls" class="space-y-4 hidden">
+                <p class="text-center text-xs text-slate-500 font-medium">Nhắc lại từ này có chính xác trong tâm trí anh không?</p>
+                <div class="grid grid-cols-4 gap-3 max-w-lg mx-auto">
+                    <button onclick="rateSRS(0)" class="py-3 px-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 rounded-2xl text-rose-400 text-xs font-black transition-all">
+                        😡 Sai bét
+                    </button>
+                    <button onclick="rateSRS(3)" class="py-3 px-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-2xl text-amber-400 text-xs font-black transition-all">
+                        😕 Mơ hồ
+                    </button>
+                    <button onclick="rateSRS(4)" class="py-3 px-2 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 rounded-2xl text-indigo-400 text-xs font-black transition-all">
+                        🙂 Nhớ đúng
+                    </button>
+                    <button onclick="rateSRS(5)" class="py-3 px-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 rounded-2xl text-emerald-400 text-xs font-black transition-all">
+                        🥳 Thuộc làu
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAMES TAB -->
+        <div id="tab-games" class="p-6 md:p-10 space-y-8 hidden max-w-4xl mx-auto w-full">
+            <div class="border-b border-slate-800 pb-6 flex justify-between items-center">
+                <div>
+                    <h2 class="text-3xl font-black text-white leading-tight">🎮 Khu Vực Game Phản Xạ</h2>
+                    <p class="text-slate-400 text-sm mt-1">Củng cố phản xạ không cần dịch bồi bằng phương thức chơi vui nhộn.</p>
+                </div>
+            </div>
+
+            <!-- Game Select Area -->
+            <div id="game-select" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Multiple Choice Game Box -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl flex flex-col justify-between hover:border-indigo-500/50 transition-all group">
+                    <div class="space-y-4">
+                        <div class="text-4xl">🎯</div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">Săn Tìm Ý Nghĩa (Quiz)</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Học máy thông minh lọc ngẫu nhiên các cụm từ anh đã học, đưa ra 4 phương án dịch để anh bấm chọn phản xạ trong 10 giây.</p>
+                    </div>
+                    <button onclick="startGame('quiz')" class="mt-6 bg-indigo-600 hover:bg-indigo-500 text-white w-full py-3.5 rounded-2xl font-bold text-sm transition-all shadow-md">
+                        Chơi Ngay
+                    </button>
+                </div>
+
+                <!-- Word Scramble Game Box -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl flex flex-col justify-between hover:border-emerald-500/50 transition-all group">
+                    <div class="space-y-4">
+                        <div class="text-4xl">🧩</div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">Sắp Xếp Phản Xạ (Scramble)</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Xáo trộn vị trí của collocation/idiom, anh cần kéo thả hoặc click chọn thứ tự đúng để lắp ghép lại thành một cụm chuẩn ngữ pháp.</p>
+                    </div>
+                    <button onclick="startGame('scramble')" class="mt-6 bg-emerald-600 hover:bg-emerald-500 text-white w-full py-3.5 rounded-2xl font-bold text-sm transition-all shadow-md">
+                        Chơi Ngay
+                    </button>
+                </div>
+            </div>
+
+            <!-- Active Game Play Zone -->
+            <div id="game-playzone" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                    <span id="game-mode-title" class="text-sm font-extrabold text-indigo-400 uppercase tracking-widest">SĂN TÌM Ý NGHĨA</span>
+                    <button onclick="exitGame()" class="text-xs bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl text-slate-300 font-bold transition-all">Thoát Game</button>
+                </div>
+
+                <!-- Game Content (Quiz Mode) -->
+                <div id="game-content-quiz" class="space-y-6 hidden">
+                    <div class="text-center space-y-2">
+                        <span class="text-xs text-slate-500 uppercase tracking-wider block">Cụm từ tiếng Anh là gì?</span>
+                        <h4 id="quiz-question-txt" class="text-2xl font-black text-white font-serif italic">burn the midnight oil</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-xl mx-auto" id="quiz-options-container">
+                        <!-- 4 choices injected here -->
+                    </div>
+                </div>
+
+                <!-- Game Content (Scramble Mode) -->
+                <div id="game-content-scramble" class="space-y-6 hidden">
+                    <div class="text-center space-y-2">
+                        <span class="text-xs text-slate-500 uppercase tracking-wider block">Dịch nghĩa:</span>
+                        <h4 id="scramble-meaning-txt" class="text-xl font-extrabold text-white">Thức khuya để học bài</h4>
+                    </div>
+
+                    <!-- Selected Slot -->
+                    <div id="scramble-slots" class="bg-slate-950 border-2 border-dashed border-slate-800 min-h-[60px] rounded-2xl p-3 flex flex-wrap gap-2 items-center justify-center">
+                        <!-- placed words go here -->
+                    </div>
+
+                    <!-- Options Bank -->
+                    <div id="scramble-options-bank" class="flex flex-wrap gap-2 justify-center max-w-xl mx-auto pt-4 border-t border-slate-800">
+                        <!-- words bank go here -->
+                    </div>
+
+                    <div class="flex justify-center pt-4">
+                        <button onclick="resetScrambleRound()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white px-4 py-2 rounded-xl transition-all">Đặt Lại / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Score indicator -->
+                <div class="flex justify-between items-center text-xs text-slate-500 pt-4 border-t border-slate-800">
+                    <span id="game-score-txt">Điểm: 0</span>
+                    <span id="game-feedback-txt" class="font-bold"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DICTIONARY TAB -->
+        <div id="tab-dictionary" class="p-6 md:p-10 space-y-6 hidden max-w-4xl mx-auto w-full">
+            <div class="border-b border-slate-800 pb-6">
+                <h2 class="text-3xl font-black text-white">🔍 Sổ Tay & Tra Cứu Toàn Bộ Cụm Từ</h2>
+                <p class="text-slate-400 text-sm mt-1">Tìm kiếm chi tiết nghĩa, ví dụ, trạng thái ôn tập SRS của từng collocations.</p>
+            </div>
+
+            <!-- Search bar & filters -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="md:col-span-2 relative">
+                    <input type="text" id="search-input" oninput="filterDictionary()" placeholder="Tìm cụm tiếng Anh hoặc ý nghĩa tiếng Việt..." class="w-full bg-slate-900 border border-slate-800 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-indigo-500 transition-all">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-lg">🔍</span>
+                </div>
+                <select id="filter-type" onchange="filterDictionary()" class="bg-slate-900 border border-slate-800 rounded-2xl py-3.5 px-4 text-sm text-slate-300 focus:outline-none focus:border-indigo-500 transition-all">
+                    <option value="all">Tất cả từ</option>
+                    <option value="collocation">Collocations</option>
+                    <option value="idiom">Idioms</option>
+                    <option value="learned">Đã học</option>
+                    <option value="unlearned">Chưa học</option>
+                </select>
+            </div>
+
+            <!-- Dict List -->
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-400">
+                        <thead class="text-[10px] uppercase font-bold text-slate-500 bg-slate-950/60 border-b border-slate-800">
+                            <tr>
+                                <th scope="col" class="px-6 py-4">Cụm từ gốc</th>
+                                <th scope="col" class="px-6 py-4">Mô tả nghĩa</th>
+                                <th scope="col" class="px-6 py-4">Loại</th>
+                                <th scope="col" class="px-6 py-4">Ngày thứ</th>
+                                <th scope="col" class="px-6 py-4 text-right">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dictionary-tbody" class="divide-y divide-slate-800/60">
+                            <!-- Injected by Javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- AI SYNC & GENERATE MODAL -->
+    <div id="ai-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-[2.5rem] w-full max-w-md overflow-hidden shadow-2xl p-6 md:p-8 space-y-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <span>✨</span> Nạp Thêm Cụm Từ Bằng AI
+                    </h3>
+                    <p class="text-slate-400 text-xs mt-1">Hệ thống gọi API để lấy Collocations / Idioms từ bộ đề Trang Anh.</p>
+                </div>
+                <button onclick="closeAIModal()" class="text-slate-500 hover:text-white text-xl font-bold bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center transition-colors">&times;</button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-1.5">Nạp vào Ngày thứ mấy?</label>
+                    <select id="ai-day-select" class="w-full bg-slate-950 border border-slate-800 rounded-2xl py-3.5 px-4 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <!-- Options Day 1-30 -->
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase font-black tracking-widest block mb-1.5">Số lượng cụm từ muốn nạp</label>
+                    <select id="ai-count-select" class="w-full bg-slate-950 border border-slate-800 rounded-2xl py-3.5 px-4 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <option value="10">10 Cụm từ</option>
+                        <option value="15" selected>15 Cụm từ</option>
+                        <option value="20">20 Cụm từ</option>
+                    </select>
+                </div>
+
+                <div class="bg-indigo-950/20 border border-indigo-500/20 rounded-2xl p-4">
+                    <p class="text-xs text-indigo-300 leading-relaxed">
+                        💡 <strong>Hoàn toàn tự động:</strong> Ứng dụng tích hợp mô hình <strong>Gemini 3-Flash</strong> để tạo nội dung cấu trúc phức tạp (Phrase, IPA, English Definition, Vietnamese translation, Examples).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Loading indicator inside modal -->
+            <div id="ai-loading" class="hidden text-center space-y-2 py-2">
+                <div class="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <p class="text-xs text-indigo-400 animate-pulse">Gemini đang biên soạn collocations chất lượng cao cho anh...</p>
+            </div>
+
+            <button onclick="generateCollocationsAI()" id="ai-generate-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-4 rounded-2xl font-bold text-sm shadow-lg shadow-indigo-600/10 transition-all flex items-center justify-center gap-2">
+                ⚡ Bắt đầu biên soạn và nạp từ
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 1. DATABASE & APPS STATE
+        const DEFAULT_HF_DATABASE = [
+            // DAY 1 COL & IDIOM SEEDS
+            {
+                id: "hf-01", phrase: "burn the midnight oil", ipa: "/bɜːrn ðə ˈmɪdnaɪt ɔɪl/", type: "idiom", day: 1,
+                meaning_vi: "thức khuya học bài hoặc làm việc", meaning_en: "to study or work late into the night",
+                example_en: "She has been burning the midnight oil to prepare for her exam.", example_vi: "Cô ấy đã thức khuya học bài để chuẩn bị cho kỳ thi của mình.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            {
+                id: "hf-02", phrase: "cost an arm and a leg", ipa: "/kɒst ən ɑːm ænd ə leg/", type: "idiom", day: 1,
+                meaning_vi: "rất đắt đỏ, tốn kém cực kỳ nhiều tiền", meaning_en: "to be extremely expensive",
+                example_en: "His new sports car cost him an arm and a leg.", example_vi: "Chiếc xe thể thao mới của anh ấy tốn của anh ấy cực kỳ nhiều tiền.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            {
+                id: "hf-03", phrase: "a piece of cake", ipa: "/ə piːs ɒv keɪk/", type: "idiom", day: 1,
+                meaning_vi: "dễ như ăn bánh, vô cùng đơn giản", meaning_en: "something that is very easy to do",
+                example_en: "Don't worry about the final test; it's a piece of cake.", example_vi: "Đừng lo lắng về bài thi cuối kỳ; nó dễ như ăn bánh thôi.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            {
+                id: "hf-04", phrase: "once in a blue moon", ipa: "/wʌns ɪn ə bluː muːn/", type: "idiom", day: 1,
+                meaning_vi: "hiếm khi nào xảy ra", meaning_en: "very rarely or almost never",
+                example_en: "My brother lives in Canada, so we only see him once in a blue moon.", example_vi: "Anh trai tôi sống ở Canada, vì vậy chúng tôi chỉ hiếm khi mới gặp anh ấy.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            {
+                id: "hf-05", phrase: "hit the books", ipa: "/hɪt ðə bʊks/", type: "idiom", day: 1,
+                meaning_vi: "bắt đầu học bài tập trung cao độ", meaning_en: "to begin studying seriously",
+                example_en: "I have a big presentation tomorrow, so I need to hit the books tonight.", example_vi: "Tôi có bài thuyết trình quan trọng vào ngày mai, vì vậy tôi cần tập trung học bài tối nay.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            // DAY 2 COL & IDIOM SEEDS
+            {
+                id: "hf-06", phrase: "under the weather", ipa: "/ˈʌndər ðə ˈweðər/", type: "idiom", day: 2,
+                meaning_vi: "mệt mỏi, không khỏe trong người", meaning_en: "feeling slightly sick or tired",
+                example_en: "I'm feeling a bit under the weather today, so I will stay home.", example_vi: "Hôm nay tôi cảm thấy hơi mệt mỏi trong người, vì vậy tôi sẽ ở nhà.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            {
+                id: "hf-07", phrase: "let the cat out of the bag", ipa: "/let ðə kæt aʊt ɒv ðə bæɡ/", type: "idiom", day: 2,
+                meaning_vi: "vô tình làm lộ bí mật", meaning_en: "to reveal a secret accidentally",
+                example_en: "We wanted to surprise her, but John let the cat out of the bag.", example_vi: "Chúng tôi đã muốn làm cô ấy bất ngờ, nhưng John đã vô tình làm lộ bí mật mất rồi.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            {
+                id: "hf-08", phrase: "pull someone's leg", ipa: "/pʊl ˈsʌmwʌnz leɡ/", type: "idiom", day: 2,
+                meaning_vi: "trêu chọc đùa giỡn ai đó", meaning_en: "to joke with someone or tease them",
+                example_en: "Are you serious, or are you just pulling my leg?", example_vi: "Anh nghiêm túc đấy à, hay anh chỉ đang đùa giỡn tôi thế?",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            {
+                id: "hf-09", phrase: "make a decision", ipa: "/meɪk ə dɪˈsɪʒn/", type: "collocation", day: 2,
+                meaning_vi: "đưa ra quyết định", meaning_en: "to choose what to do after thinking",
+                example_en: "I need to make a decision about my career soon.", example_vi: "Tôi cần sớm đưa ra quyết định về sự nghiệp của mình.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            {
+                id: "hf-10", phrase: "keep an eye on", ipa: "/kiːp ən aɪ ɒn/", type: "collocation", day: 2,
+                meaning_vi: "để mắt tới, chăm sóc trông chừng", meaning_en: "to watch or take care of someone/something",
+                example_en: "Could you please keep an eye on my bag while I go to the restroom?", example_vi: "Bạn vui lòng để mắt tới túi xách của tôi một lát khi tôi đi vệ sinh được không?",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            // DAY 3 COL & IDIOM SEEDS
+            {
+                id: "hf-11", phrase: "take something for granted", ipa: "/teɪk ˈsʌmθɪŋ fɔːr ˈɡræntɪd/", type: "collocation", day: 3,
+                meaning_vi: "coi điều gì là hiển nhiên nên không trân trọng", meaning_en: "to fail to appreciate something because you are used to it",
+                example_en: "Never take your health for granted.", example_vi: "Đừng bao giờ coi sức khỏe của bạn là điều hiển nhiên mà không trân trọng nó.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            {
+                id: "hf-12", phrase: "make progress", ipa: "/meɪk ˈprəʊɡres/", type: "collocation", day: 3,
+                meaning_vi: "đạt được sự tiến bộ", meaning_en: "to improve or develop over time",
+                example_en: "His English is making great progress thanks to daily flashcards.", example_vi: "Tiếng Anh của anh ấy đang đạt được tiến bộ lớn nhờ sử dụng flashcards hằng ngày.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            {
+                id: "hf-13", phrase: "pay attention to", ipa: "/peɪ əˈtenʃn tuː/", type: "collocation", day: 3,
+                meaning_vi: "chú ý lắng nghe hoặc quan sát cái gì", meaning_en: "to watch, listen to, or think about something carefully",
+                example_en: "You must pay attention to what the teacher is saying.", example_vi: "Bạn phải chú ý lắng nghe những gì giáo viên đang nói.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            {
+                id: "hf-14", phrase: "get down to business", ipa: "/ɡet daʊn tuː ˈbɪznəs/", type: "idiom", day: 3,
+                meaning_vi: "bắt đầu thảo luận công việc chính một cách nghiêm túc", meaning_en: "to start talking about the most important subject",
+                example_en: "Now that everyone is here, let's get down to business.", example_vi: "Hiện giờ mọi người đã có mặt đông đủ, chúng ta hãy bắt đầu vào công việc chính nhé.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            },
+            {
+                id: "hf-15", phrase: "spill the beans", ipa: "/spɪl ðə biːnz/", type: "idiom", day: 3,
+                meaning_vi: "vô tình hoặc cố ý tiết lộ bí mật", meaning_en: "to reveal secret information unintentionally or intentionally",
+                example_en: "We planned a surprise birthday party, but Peter spilled the beans.", example_vi: "Chúng tôi đã lên kế hoạch cho một bữa tiệc sinh nhật bất ngờ, nhưng Peter lại lỡ mồm tiết lộ bí mật mất rồi.",
+                repetition: 0, interval: 1, easiness: 2.5, dueDate: Date.now()
+            }
+        ];
+
+        // System state variables
+        let database = [];
+        let completedDays = [];
+        let currentDayIdx = 1;
+        let activeDeck = [];
+        let currentCardIdx = 0;
+        let srsReviewQueue = [];
+        let currentSRSCardIdx = 0;
+        let currentTab = "dashboard";
+
+        // Game state variables
+        let activeGameMode = ""; // "quiz" or "scramble"
+        let gameScore = 0;
+        let scrambleSelectedWords = [];
+        let currentRoundCard = null;
+
+        // API settings for AI generation
+        const apiKey = ""; // Canvas auto injection in runtime
+        const geminiModel = "gemini-3-flash-preview";
+
+        // 2. STORAGE SYSTEM
+        function initStorage() {
+            const localData = localStorage.getItem('collocations_database_v1');
+            if (localData) {
+                database = JSON.parse(localData);
+            } else {
+                database = [...DEFAULT_HF_DATABASE];
+                saveToStorage();
+            }
+
+            const localProgress = localStorage.getItem('collocations_progress_v1');
+            if (localProgress) {
+                completedDays = JSON.parse(localProgress);
+            } else {
+                completedDays = [];
+            }
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('collocations_database_v1', JSON.stringify(database));
+            localStorage.setItem('collocations_progress_v1', JSON.stringify(completedDays));
+        }
+
+        // 3. SPACED REPETITION (SM2) ALGORITHM ENGINE
+        function updateSRSState(cardId, score) {
+            // SM2 Algorithm Logic
+            const card = database.find(c => c.id === cardId);
+            if (!card) return;
+
+            // Score explanation:
+            // 0: forgot, reset repetition to 0, interval to 1
+            // 3: vague/hard, reset repetition to 0, interval to 1
+            // 4: got it right, increment repetition
+            // 5: easy, increment repetition, increase easiness
+            
+            if (score < 3) {
+                card.repetition = 0;
+                card.interval = 1;
+            } else {
+                if (card.repetition === 0) {
+                    card.interval = 1;
+                } else if (card.repetition === 1) {
+                    card.interval = 6;
+                } else {
+                    card.interval = Math.round(card.interval * card.easiness);
+                }
+                card.repetition++;
+            }
+
+            // Adjust easiness
+            card.easiness = card.easiness + (0.1 - (5 - score) * (0.08 + (5 - score) * 0.02));
+            if (card.easiness < 1.3) card.easiness = 1.3;
+
+            // Calculate exact next due date based on calculated interval
+            const now = new Date();
+            now.setDate(now.getDate() + card.interval);
+            card.dueDate = now.getTime(); // epoch timestamp
+
+            saveToStorage();
+            updateSidebarStats();
+        }
+
+        // 4. NAVIGATION & TAB SYSTEM
+        function switchTab(tabId) {
+            currentTab = tabId;
+            
+            // Toggle sidebar visually
+            const tabs = ['dashboard', 'flashcards', 'srs', 'games', 'dictionary'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`nav-${t}`);
+                if (t === tabId) {
+                    btn.className = "w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-600/10";
+                } else {
+                    btn.className = "w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50";
+                }
+
+                const block = document.getElementById(`tab-${t}`);
+                if (t === tabId) {
+                    block.classList.remove('hidden');
+                    block.classList.add('flex', 'block');
+                } else {
+                    block.classList.add('hidden');
+                    block.classList.remove('flex', 'block');
+                }
+            });
+
+            // Specific page load setups
+            if (tabId === 'dashboard') {
+                renderDashboard();
+            } else if (tabId === 'srs') {
+                setupSRSDeck();
+            } else if (tabId === 'dictionary') {
+                renderDictionary();
+            } else if (tabId === 'games') {
+                exitGame(); // reset state
+            }
+        }
+
+        // 5. DASHBOARD & MAP GRID RENDER
+        function renderDashboard() {
+            const grid = document.getElementById('days-grid');
+            grid.innerHTML = '';
+
+            for (let i = 1; i <= 30; i++) {
+                const dayCards = database.filter(c => c.day === i);
+                const totalInDay = dayCards.length;
+                const learnedInDay = dayCards.filter(c => c.repetition > 0).length;
+                
+                let percentText = "0%";
+                let isCompleted = completedDays.includes(i);
+                if (totalInDay > 0) {
+                    percentText = `${Math.round((learnedInDay / totalInDay) * 100)}%`;
+                }
+
+                const card = document.createElement('div');
+                card.onclick = () => startLearningDay(i);
+                card.className = `p-5 rounded-3xl border text-left cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl ${
+                    isCompleted 
+                    ? 'bg-emerald-950/20 border-emerald-500/30 hover:border-emerald-500/50' 
+                    : totalInDay > 0 
+                      ? 'bg-slate-900 border-slate-800 hover:border-indigo-500/40' 
+                      : 'bg-slate-900/40 border-slate-950 opacity-40 hover:opacity-80'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-xs text-indigo-400 font-extrabold bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-1 rounded-xl">Ngày ${i}</span>
+                        ${isCompleted ? '<span class="text-xs text-emerald-400 font-extrabold">✓ Đã học</span>' : `<span class="text-xs text-slate-500 font-bold">${percentText}</span>`}
+                    </div>
+                    <h4 class="font-bold text-white text-sm">Chủ đề ngày ${i}</h4>
+                    <p class="text-[10px] text-slate-500 mt-1">${totalInDay} Cụm Từ Cần Học</p>
+                    <div class="w-full bg-slate-800 h-1.5 rounded-full mt-4 overflow-hidden">
+                        <div class="bg-indigo-500 h-full" style="width: ${percentText}"></div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+            updateSidebarStats();
+        }
+
+        function updateSidebarStats() {
+            const total = database.length;
+            const learned = database.filter(c => c.repetition > 0).length;
+            const percentage = total > 0 ? Math.round((learned / total) * 100) : 0;
+
+            document.getElementById('global-progress-txt').textContent = `${percentage}%`;
+            document.getElementById('global-progress-bar').style.style = `width: ${percentage}%`;
+            document.getElementById('global-progress-bar').style.width = `${percentage}%`;
+            document.getElementById('learned-count').textContent = learned;
+
+            // Calculate active due SRS cards
+            const now = Date.now();
+            const dueCount = database.filter(c => c.repetition > 0 && c.dueDate <= now).length;
+            document.getElementById('srs-due-count').textContent = dueCount;
+            
+            const badge = document.getElementById('srs-badge');
+            if (dueCount > 0) {
+                badge.textContent = dueCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // 6. LEARNING & FLASHCARD CONTROLLER
+        function startLearningDay(dayNumber) {
+            activeDeck = database.filter(c => c.day === dayNumber);
+            currentDayIdx = dayNumber;
+
+            if (activeDeck.length === 0) {
+                // If the day is currently empty, guide user to generate vocabulary via AI
+                showAIModal(dayNumber);
+                return;
+            }
+
+            currentCardIdx = 0;
+            document.getElementById('current-deck-title').textContent = `Học Ngày ${dayNumber}`;
+            switchTab('flashcards');
+            renderCard();
+        }
+
+        function renderCard() {
+            if (activeDeck.length === 0) return;
+            const currentCard = activeDeck[currentCardIdx];
+
+            // Reset lật thẻ về mặt trước trước khi load dữ liệu mới
+            document.getElementById('flashcard-inner').classList.remove('flipped');
+
+            setTimeout(() => {
+                document.getElementById('card-phrase').textContent = currentCard.phrase;
+                document.getElementById('card-ipa').textContent = currentCard.ipa;
+                document.getElementById('card-meaning-vi').textContent = currentCard.meaning_vi;
+                document.getElementById('card-example-en').textContent = `"${currentCard.example_en}"`;
+                document.getElementById('card-example-vi').textContent = `"${currentCard.example_vi}"`;
+                document.getElementById('card-type-badge-front').textContent = currentCard.type.toUpperCase();
+                document.getElementById('card-type-badge-back').textContent = currentCard.type.toUpperCase();
+                document.getElementById('card-index-txt').textContent = `#${currentCardIdx + 1}`;
+                document.getElementById('card-progress-counter').textContent = `${currentCardIdx + 1} / ${activeDeck.length} Cụm Từ`;
+            }, 100);
+        }
+
+        function flipCard() {
+            document.getElementById('flashcard-inner').classList.toggle('flipped');
+        }
+
+        function triggerTTS() {
+            if (activeDeck.length === 0) return;
+            const phrase = activeDeck[currentCardIdx].phrase;
+            speakText(phrase);
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                // Cancel active speeches
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9; // speak slightly slower for learning focus
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function nextCard() {
+            if (currentCardIdx < activeDeck.length - 1) {
+                currentCardIdx++;
+                renderCard();
+            } else {
+                // Completed the day
+                if (!completedDays.includes(currentDayIdx)) {
+                    completedDays.push(currentDayIdx);
+                    saveToStorage();
+                }
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                renderDashboard();
+                switchTab('dashboard');
+            }
+        }
+
+        function prevCard() {
+            if (currentCardIdx > 0) {
+                currentCardIdx--;
+                renderCard();
+            }
+        }
+
+        function rateCard(score) {
+            if (activeDeck.length === 0) return;
+            const currentCard = activeDeck[currentCardIdx];
+            updateSRSState(currentCard.id, score);
+            nextCard();
+        }
+
+        // 7. SRS ACTIVE REVIEW VIEWPORTS
+        function setupSRSDeck() {
+            const now = Date.now();
+            srsReviewQueue = database.filter(c => c.repetition > 0 && c.dueDate <= now);
+            currentSRSCardIdx = 0;
+
+            const emptyState = document.getElementById('srs-empty');
+            const activeDeckBlock = document.getElementById('srs-deck');
+            const controlsBlock = document.getElementById('srs-controls');
+
+            if (srsReviewQueue.length === 0) {
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+                activeDeckBlock.classList.add('hidden');
+                controlsBlock.classList.add('hidden');
+                document.getElementById('srs-progress-counter').textContent = "0 Cụm Từ Cần Ôn";
+            } else {
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+                activeDeckBlock.classList.remove('hidden');
+                controlsBlock.classList.remove('hidden');
+                document.getElementById('srs-progress-counter').textContent = `${srsReviewQueue.length} Cụm Từ Cần Ôn`;
+                renderSRSCard();
+            }
+        }
+
+        function renderSRSCard() {
+            if (srsReviewQueue.length === 0) return;
+            const currentCard = srsReviewQueue[currentSRSCardIdx];
+
+            document.getElementById('flashcard-srs-inner').classList.remove('flipped');
+
+            setTimeout(() => {
+                document.getElementById('srs-card-phrase').textContent = currentCard.phrase;
+                document.getElementById('srs-card-ipa').textContent = currentCard.ipa;
+                document.getElementById('srs-card-meaning-vi').textContent = currentCard.meaning_vi;
+                document.getElementById('srs-card-example-en').textContent = `"${currentCard.example_en}"`;
+                document.getElementById('srs-card-example-vi').textContent = `"${currentCard.example_vi}"`;
+            }, 100);
+        }
+
+        function flipCardSRS() {
+            document.getElementById('flashcard-srs-inner').classList.toggle('flipped');
+        }
+
+        function triggerSRSTTS() {
+            if (srsReviewQueue.length === 0) return;
+            speakText(srsReviewQueue[currentSRSCardIdx].phrase);
+        }
+
+        function rateSRS(score) {
+            if (srsReviewQueue.length === 0) return;
+            const currentCard = srsReviewQueue[currentSRSCardIdx];
+            updateSRSState(currentCard.id, score);
+
+            // Pop from current review session
+            srsReviewQueue.splice(currentSRSCardIdx, 1);
+            if (srsReviewQueue.length > 0) {
+                if (currentSRSCardIdx >= srsReviewQueue.length) {
+                    currentSRSCardIdx = 0;
+                }
+                document.getElementById('srs-progress-counter').textContent = `${srsReviewQueue.length} Cụm Từ Cần Ôn`;
+                renderSRSCard();
+            } else {
+                setupSRSDeck();
+            }
+        }
+
+        // 8. GAME CORNER LOGICS
+        function startGame(mode) {
+            activeGameMode = mode;
+            gameScore = 0;
+            document.getElementById('game-score-txt').textContent = "Điểm: 0";
+            document.getElementById('game-feedback-txt').textContent = "";
+            document.getElementById('game-select').classList.add('hidden');
+            document.getElementById('game-playzone').classList.remove('hidden');
+
+            const learnedWords = database.filter(c => c.repetition > 0);
+            if (learnedWords.length < 4) {
+                // Not enough learned words to play
+                document.getElementById('game-playzone').innerHTML = `
+                    <div class="text-center py-8 space-y-4">
+                        <p class="text-sm text-slate-400">🚨 Anh ơi, anh cần phải học thuộc tối thiểu <strong>4 cụm từ</strong> thì mới bắt đầu chơi được nhé!</p>
+                        <button onclick="exitGame()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold">Quay lại</button>
+                    </div>
+                `;
+                return;
+            }
+
+            if (mode === 'quiz') {
+                document.getElementById('game-mode-title').textContent = "SĂN TÌM Ý NGHĨA";
+                document.getElementById('game-content-quiz').classList.remove('hidden');
+                document.getElementById('game-content-scramble').classList.add('hidden');
+                nextQuizRound();
+            } else if (mode === 'scramble') {
+                document.getElementById('game-mode-title').textContent = "SẮP XẾP PHẢN XẠ";
+                document.getElementById('game-content-quiz').classList.add('hidden');
+                document.getElementById('game-content-scramble').classList.remove('hidden');
+                nextScrambleRound();
+            }
+        }
+
+        function exitGame() {
+            activeGameMode = "";
+            document.getElementById('game-select').classList.remove('hidden');
+            document.getElementById('game-playzone').classList.add('hidden');
+            
+            // Restore default templates
+            document.getElementById('game-playzone').innerHTML = `
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                    <span id="game-mode-title" class="text-sm font-extrabold text-indigo-400 uppercase tracking-widest">SĂN TÌM Ý NGHĨA</span>
+                    <button onclick="exitGame()" class="text-xs bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl text-slate-300 font-bold transition-all">Thoát Game</button>
+                </div>
+                <div id="game-content-quiz" class="space-y-6 hidden">
+                    <div class="text-center space-y-2">
+                        <span class="text-xs text-slate-500 uppercase tracking-wider block">Cụm từ tiếng Anh là gì?</span>
+                        <h4 id="quiz-question-txt" class="text-2xl font-black text-white font-serif italic"></h4>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-xl mx-auto" id="quiz-options-container"></div>
+                </div>
+                <div id="game-content-scramble" class="space-y-6 hidden">
+                    <div class="text-center space-y-2">
+                        <span class="text-xs text-slate-500 uppercase tracking-wider block">Dịch nghĩa:</span>
+                        <h4 id="scramble-meaning-txt" class="text-xl font-extrabold text-white"></h4>
+                    </div>
+                    <div id="scramble-slots" class="bg-slate-950 border-2 border-dashed border-slate-800 min-h-[60px] rounded-2xl p-3 flex flex-wrap gap-2 items-center justify-center"></div>
+                    <div id="scramble-options-bank" class="flex flex-wrap gap-2 justify-center max-w-xl mx-auto pt-4 border-t border-slate-800"></div>
+                    <div class="flex justify-center pt-4">
+                        <button onclick="resetScrambleRound()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white px-4 py-2 rounded-xl transition-all">Đặt Lại / Reset</button>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center text-xs text-slate-500 pt-4 border-t border-slate-800">
+                    <span id="game-score-txt">Điểm: 0</span>
+                    <span id="game-feedback-txt" class="font-bold"></span>
+                </div>
+            `;
+        }
+
+        function nextQuizRound() {
+            const learnedWords = database.filter(c => c.repetition > 0);
+            currentRoundCard = learnedWords[Math.floor(Math.random() * learnedWords.length)];
+
+            document.getElementById('quiz-question-txt').textContent = currentRoundCard.phrase;
+
+            // Generate wrong options randomly
+            const pool = database.filter(c => c.id !== currentRoundCard.id);
+            const shuffledPool = pool.sort(() => Math.random() - 0.5);
+            const wrongOptions = shuffledPool.slice(0, 3).map(c => c.meaning_vi);
+            
+            const allOptions = [...wrongOptions, currentRoundCard.meaning_vi].sort(() => Math.random() - 0.5);
+
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
+
+            allOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl border-2 border-slate-800 hover:border-indigo-500 hover:bg-slate-800/40 text-xs font-semibold text-slate-300 transition-all";
+                btn.textContent = opt;
+                btn.onclick = () => selectQuizAnswer(opt, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectQuizAnswer(selectedOpt, btnElement) {
+            const optionsContainer = document.getElementById('quiz-options-container');
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            if (selectedOpt === currentRoundCard.meaning_vi) {
+                btnElement.className = "w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-500/10 text-emerald-400 text-xs font-black transition-all";
+                gameScore += 10;
+                document.getElementById('game-score-txt').textContent = `Điểm: ${gameScore}`;
+                document.getElementById('game-feedback-txt').className = "text-emerald-400 font-bold";
+                document.getElementById('game-feedback-txt').textContent = "✓ Tuyệt vời! +10đ";
+                
+                // Play sound pronunciation
+                speakText(currentRoundCard.phrase);
+            } else {
+                btnElement.className = "w-full text-left p-4 rounded-2xl border-2 border-rose-500 bg-rose-500/10 text-rose-400 text-xs font-black transition-all";
+                document.getElementById('game-feedback-txt').className = "text-rose-400 font-bold";
+                document.getElementById('game-feedback-txt').textContent = "✗ Sai rồi anh ơi!";
+                
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.textContent === currentRoundCard.meaning_vi) {
+                        b.className = "w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-500/10 text-emerald-400 text-xs font-black transition-all";
+                    }
+                });
+            }
+
+            setTimeout(() => {
+                document.getElementById('game-feedback-txt').textContent = "";
+                nextQuizRound();
+            }, 1800);
+        }
+
+        function nextScrambleRound() {
+            const learnedWords = database.filter(c => c.repetition > 0);
+            currentRoundCard = learnedWords[Math.floor(Math.random() * learnedWords.length)];
+
+            document.getElementById('scramble-meaning-txt').textContent = currentRoundCard.meaning_vi;
+
+            // Split phrase into single words
+            const wordsList = currentRoundCard.phrase.split(" ");
+            const shuffledWords = [...wordsList].sort(() => Math.random() - 0.5);
+
+            scrambleSelectedWords = [];
+            const slots = document.getElementById('scramble-slots');
+            const bank = document.getElementById('scramble-options-bank');
+
+            slots.innerHTML = '<span class="text-xs text-slate-600">Bấm các từ phía dưới để lắp ghép</span>';
+            bank.innerHTML = '';
+
+            shuffledWords.forEach((word, index) => {
+                const btn = document.createElement('button');
+                btn.className = "bg-slate-800 hover:bg-slate-700 border border-slate-700 px-4 py-2 rounded-xl text-xs font-bold text-slate-300 transition-all";
+                btn.textContent = word;
+                btn.onclick = () => selectScrambleWord(word, btn);
+                bank.appendChild(btn);
+            });
+        }
+
+        function selectScrambleWord(word, btn) {
+            const slots = document.getElementById('scramble-slots');
+            if (scrambleSelectedWords.length === 0) {
+                slots.innerHTML = ''; // clear placeholder
+            }
+
+            // Append word
+            const tag = document.createElement('span');
+            tag.className = "bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 px-3 py-1.5 rounded-xl text-xs font-bold transition-all animate-bounce";
+            tag.textContent = word;
+            slots.appendChild(tag);
+
+            btn.classList.add('opacity-30', 'pointer-events-none');
+            scrambleSelectedWords.push(word);
+
+            // Check correctness when fully built
+            const originalLength = currentRoundCard.phrase.split(" ").length;
+            if (scrambleSelectedWords.length === originalLength) {
+                const builtPhrase = scrambleSelectedWords.join(" ");
+                if (builtPhrase.trim().toLowerCase() === currentRoundCard.phrase.trim().toLowerCase()) {
+                    slots.className = "bg-emerald-500/10 border-2 border-emerald-500/40 min-h-[60px] rounded-2xl p-3 flex flex-wrap gap-2 items-center justify-center transition-all duration-300";
+                    gameScore += 10;
+                    document.getElementById('game-score-txt').textContent = `Điểm: ${gameScore}`;
+                    document.getElementById('game-feedback-txt').className = "text-emerald-400 font-bold";
+                    document.getElementById('game-feedback-txt').textContent = "✓ Sắp xếp chính xác! +10đ";
+                    speakText(currentRoundCard.phrase);
+
+                    setTimeout(() => {
+                        slots.className = "bg-slate-950 border-2 border-dashed border-slate-800 min-h-[60px] rounded-2xl p-3 flex flex-wrap gap-2 items-center justify-center";
+                        document.getElementById('game-feedback-txt').textContent = "";
+                        nextScrambleRound();
+                    }, 1800);
+                } else {
+                    slots.className = "bg-rose-500/10 border-2 border-rose-500/40 min-h-[60px] rounded-2xl p-3 flex flex-wrap gap-2 items-center justify-center transition-all duration-300";
+                    document.getElementById('game-feedback-txt').className = "text-rose-400 font-bold";
+                    document.getElementById('game-feedback-txt').textContent = "✗ Sai thứ tự rồi anh ơi!";
+                    
+                    setTimeout(() => {
+                        slots.className = "bg-slate-950 border-2 border-dashed border-slate-800 min-h-[60px] rounded-2xl p-3 flex flex-wrap gap-2 items-center justify-center";
+                        document.getElementById('game-feedback-txt').textContent = "";
+                        resetScrambleRound();
+                    }, 1800);
+                }
+            }
+        }
+
+        function resetScrambleRound() {
+            scrambleSelectedWords = [];
+            const slots = document.getElementById('scramble-slots');
+            slots.innerHTML = '<span class="text-xs text-slate-600">Bấm các từ phía dưới để lắp ghép</span>';
+            
+            const bank = document.getElementById('scramble-options-bank');
+            const buttons = bank.querySelectorAll('button');
+            buttons.forEach(b => {
+                b.classList.remove('opacity-30', 'pointer-events-none');
+            });
+        }
+
+        // 9. DICTIONARY & SEARCH CORES
+        function renderDictionary() {
+            const tbody = document.getElementById('dictionary-tbody');
+            tbody.innerHTML = '';
+
+            const list = [...database];
+            list.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/30 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-bold text-white">${item.phrase}</td>
+                    <td class="px-6 py-4 text-xs text-slate-300">${item.meaning_vi}</td>
+                    <td class="px-6 py-4 text-xs"><span class="px-2.5 py-1 rounded-full ${item.type === 'collocation' ? 'bg-indigo-500/10 text-indigo-400' : 'bg-emerald-500/10 text-emerald-400'} border border-slate-800">${item.type}</span></td>
+                    <td class="px-6 py-4 text-xs">Ngày ${item.day}</td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="speakText('${item.phrase}')" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs text-slate-300 font-bold">🔊 Nghe</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterDictionary() {
+            const searchVal = document.getElementById('search-input').value.toLowerCase();
+            const typeFilter = document.getElementById('filter-type').value;
+
+            const tbody = document.getElementById('dictionary-tbody');
+            tbody.innerHTML = '';
+
+            const filtered = database.filter(item => {
+                const matchesSearch = item.phrase.toLowerCase().includes(searchVal) || item.meaning_vi.toLowerCase().includes(searchVal);
+                
+                let matchesType = true;
+                if (typeFilter === 'collocation' || typeFilter === 'idiom') {
+                    matchesType = item.type === typeFilter;
+                } else if (typeFilter === 'learned') {
+                    matchesType = item.repetition > 0;
+                } else if (typeFilter === 'unlearned') {
+                    matchesType = item.repetition === 0;
+                }
+
+                return matchesSearch && matchesType;
+            });
+
+            filtered.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/30 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-bold text-white">${item.phrase}</td>
+                    <td class="px-6 py-4 text-xs text-slate-300">${item.meaning_vi}</td>
+                    <td class="px-6 py-4 text-xs"><span class="px-2.5 py-1 rounded-full ${item.type === 'collocation' ? 'bg-indigo-500/10 text-indigo-400' : 'bg-emerald-500/10 text-emerald-400'} border border-slate-800">${item.type}</span></td>
+                    <td class="px-6 py-4 text-xs">Ngày ${item.day}</td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="speakText('${item.phrase}')" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs text-slate-300 font-bold">🔊 Nghe</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 10. AI GENERATION & SYNC LOGICS WITH GEMINI
+        function showAIModal(dayNumber = 1) {
+            document.getElementById('ai-modal').classList.remove('hidden');
+            const select = document.getElementById('ai-day-select');
+            select.innerHTML = '';
+
+            for (let i = 1; i <= 30; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Ngày ${i}`;
+                if (i === dayNumber) option.selected = true;
+                select.appendChild(option);
+            }
+        }
+
+        function closeAIModal() {
+            document.getElementById('ai-modal').classList.add('hidden');
+        }
+
+        async function generateCollocationsAI() {
+            const targetDay = parseInt(document.getElementById('ai-day-select').value);
+            const wordsCount = parseInt(document.getElementById('ai-count-select').value);
+
+            // UI feedback
+            const genBtn = document.getElementById('ai-generate-btn');
+            const loadingIndicator = document.getElementById('ai-loading');
+
+            genBtn.disabled = true;
+            genBtn.classList.add('opacity-50');
+            loadingIndicator.classList.remove('hidden');
+
+            const systemPrompt = `You are a professional English linguist. Your goal is to produce advanced collocation and idioms from the book "4500 ENGLISH COLLOCATIONS AND IDIOMS" by Trang Anh. Output MUST strictly conform to the provided JSON schema. Ensure the idioms or collocations generated are extremely accurate, useful, high-frequency, and educational.`;
+            const userPrompt = `Please generate exactly ${wordsCount} advanced collocations or idioms suitable for learning on Day ${targetDay} of a 30-day program. Make sure they have clear, useful Vietnamese meanings, correct IPA, clear English definitions, and concrete examples (with Vietnamese translations). Avoid repeating common basic ones.`;
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                phrase: { type: "STRING", description: "The English collocation or idiom" },
+                                ipa: { type: "STRING", description: "IPA phonetic translation" },
+                                type: { type: "STRING", description: "Must be either 'collocation' or 'idiom'" },
+                                meaning_vi: { type: "STRING", description: "Vietnamese detailed translation" },
+                                meaning_en: { type: "STRING", description: "English detailed definition" },
+                                example_en: { type: "STRING", description: "Useful example sentence in English" },
+                                example_vi: { type: "STRING", description: "Vietnamese translation of that example" },
+                                img_keyword: { type: "STRING", description: "1-2 keywords for image lookup" }
+                            },
+                            required: ["phrase", "ipa", "type", "meaning_vi", "meaning_en", "example_en", "example_vi", "img_keyword"]
+                        }
+                    }
+                }
+            };
+
+            let attempts = 0;
+            const maxAttempts = 3;
+            let delay = 1000;
+
+            async function performFetch() {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 429 && attempts < maxAttempts) {
+                            attempts++;
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            delay *= 2; // double delay time
+                            return performFetch();
+                        }
+                        throw new Error(`HTTP Error Status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (!text) {
+                        throw new Error("No output candidate found in response.");
+                    }
+
+                    const parsedList = JSON.parse(text);
+                    if (Array.isArray(parsedList)) {
+                        // Ingest into active database
+                        parsedList.forEach((item, idx) => {
+                            const newCard = {
+                                id: `ai-${targetDay}-${Date.now()}-${idx}`,
+                                phrase: item.phrase,
+                                ipa: item.ipa,
+                                type: item.type === 'collocation' || item.type === 'idiom' ? item.type : 'collocation',
+                                day: targetDay,
+                                meaning_vi: item.meaning_vi,
+                                meaning_en: item.meaning_en,
+                                example_en: item.example_en,
+                                example_vi: item.example_vi,
+                                img_keyword: item.img_keyword,
+                                repetition: 0,
+                                interval: 1,
+                                easiness: 2.5,
+                                dueDate: Date.now()
+                            };
+                            database.push(newCard);
+                        });
+
+                        saveToStorage();
+                        
+                        // Done UI feedback
+                        confetti({
+                            particleCount: 80,
+                            spread: 60,
+                            origin: { y: 0.8 }
+                        });
+
+                        closeAIModal();
+                        renderDashboard();
+                    }
+                } catch (error) {
+                    console.error("Gemini Generation Error:", error);
+                    alert("Có lỗi nhỏ xảy ra khi liên kết máy chủ AI. Anh vui lòng thử lại nhé!");
+                } finally {
+                    genBtn.disabled = false;
+                    genBtn.classList.remove('opacity-50');
+                    loadingIndicator.classList.add('hidden');
+                }
+            }
+
+            await performFetch();
+        }
+
+        // 11. BOOTSTRAP INITIALIZATION
+        window.onload = () => {
+            initStorage();
+            renderDashboard();
+            switchTab('dashboard');
+        };
+    </script>
+</body>
+</html>
